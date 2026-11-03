@@ -1,0 +1,2 @@
+# Only needed to re-import a PDF. The running app uses the Python standard library.
+pypdf>=6,<7

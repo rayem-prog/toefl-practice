@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef4f8">
+  <title>听后回应 · TOEFL Response Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="练习器首页"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span>Response Lab <small>听后回应练习室</small></span></a>
+    <div class="top-actions"><span class="connection" id="connection">正在连接…</span><button class="button quiet" id="settingsButton">语音设置</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="练习设置">
+      <p class="eyebrow">TOEFL LISTENING</p>
+      <h1>听后回应</h1>
+      <p class="sidebar-intro">听懂一句话，也听懂它的意图。</p>
+      <div class="mode-picker" role="group" aria-label="练习模式">
+        <button class="mode active" data-mode="practice"><span>日常练习</span><small>重听、慢放、即时解析</small></button>
+        <button class="mode" data-mode="challenge"><span>限时挑战</span><small>只听一次，整组交卷</small></button>
+        <button class="mode" data-mode="review"><span>错题复习 <b id="wrongBadge">0</b></span><small>再听一遍，再理解一次</small></button>
+      </div>
+      <label class="field">题目来源<select id="setSelect"><option value="random">正在载入题库…</option></select></label>
+      <label class="field">每组题数<select id="countSelect"><option value="10">10 题</option><option value="20" selected>20 题</option><option value="all">所选套题全部</option></select></label>
+      <label class="field" id="timeField" hidden>每题作答时间<select id="timeSelect"><option value="10">10 秒</option><option value="15" selected>15 秒</option><option value="20">20 秒</option></select><small>练习设置，不代表官方限时</small></label>
+      <button class="button primary start-button" id="startButton" disabled>开始练习 <span aria-hidden="true">→</span></button>
+      <button class="button text-button" id="resumeButton" hidden>继续上次练习</button>
+      <div class="sidebar-footer"><span class="tiny-label">你的练习记录</span><div class="record-actions"><button id="exportButton">导出</button><button id="importButton">导入</button></div><input type="file" id="importFile" accept="application/json,.json" hidden><p>保存在本机浏览器，可导出备份。</p></div>
+    </aside>
+    <main id="main">
+      <section id="welcome" class="welcome">
+        <div class="welcome-copy"><p class="eyebrow">LISTEN. UNDERSTAND. RESPOND.</p><h2>先听一句，<br>再做回应。</h2><p class="lead">把文字题变成真正的听力练习。<br>自然的连读、弱读与语调，让你练习听懂意思。</p></div>
+        <div class="listening-illustration" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="listen-disc"><div class="wave welcome-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>ready when you are</span></div><div class="sound-caption">ONE PROMPT. FOUR RESPONSES.</div></div>
+        <div class="welcome-steps"><article><span>01 / 听</span><h3>先听题干</h3><p>隐藏文字，专注句子与语气。</p></article><article><span>02 / 选</span><h3>选择自然回应</h3><p>四个选项中，找出最合适的一句。</p></article><article><span>03 / 学</span><h3>理解为什么</h3><p>提交后核对原文，复习错题。</p></article></div>
+        <div class="source-note"><strong id="bankCount">正在读取题库</strong><span>来自你提供的题目资料 · Qwen AI 合成语音</span></div>
+      </section>
+      <section id="exercise" hidden>
+        <div class="exercise-heading"><div><p class="eyebrow" id="sessionModeLabel">日常练习</p><h2>Choose the best response.</h2><p id="sourceTitle" class="source-title"></p></div><div class="question-counter"><strong id="currentNumber">01</strong><span id="totalNumber">/ 20</span></div></div>
+        <div class="progress-track"><div id="progressFill"></div></div>
+        <div class="audio-panel" id="audioPanel">
+          <div class="audio-topline"><span class="audio-label"><span class="dot"></span>ENGLISH · CONNECTED SPEECH</span><span class="timer" id="timer" hidden>15s</span></div>
+          <div class="wave question-wave" id="questionWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <button class="button play-button" id="playButton"><span aria-hidden="true">▶</span> 播放题干</button>
+          <p class="audio-status" id="audioStatus" aria-live="polite">先听题干，播放结束后显示选项。</p>
+          <div class="audio-controls"><label>音色<select id="voiceSelect"><option value="Serena">英文女声 · Serena</option><option value="Ethan">英文男声 · Ethan</option><option value="Cherry">英文女声 · Cherry</option></select></label><label>速度<select id="speedSelect"><option value="0.8">0.8×</option><option value="1" selected>1.0×</option><option value="1.2">1.2×</option></select></label><button class="button quiet" id="downloadButton" hidden>下载本题音频</button></div>
+        </div>
+        <div class="choices-section" id="choicesSection" hidden><div class="choices-caption"><span>选择最合适的回应</span><small>键盘 A–D 或 1–4</small></div><div class="choices" id="choices" role="group" aria-label="回应选项"></div></div>
+        <div class="answer-actions"><p id="answerHint">不显示题干原文，先靠耳朵理解。</p><button class="button primary" id="submitButton" disabled hidden>提交答案</button><button class="button primary" id="nextButton" hidden>下一题 →</button></div>
+        <section id="feedback" class="feedback" hidden aria-live="polite"><div class="feedback-heading"><span id="resultBadge"></span><strong id="resultText"></strong></div><p class="tiny-label">题干原文</p><p class="transcript" id="transcript"></p><p class="tiny-label">原资料参考解析</p><p id="explanation" class="explanation"></p></section>
+      </section>
+      <section id="results" hidden><p class="eyebrow">SESSION COMPLETE</p><h2 class="results-title">这一组，完成了。</h2><div class="score-line"><strong id="score">0</strong><span id="scoreTotal">/ 20</span><div><b id="accuracy">0%</b><span>本组正确率</span></div></div><p class="result-note" id="resultNote"></p><div class="result-controls"><button class="button primary" id="againButton">再练一组</button><button class="button quiet" id="reviewSessionButton">复习本组错题</button></div><div class="review-list" id="reviewList"></div></section>
+      <p class="page-error" id="pageError" role="alert" hidden></p>
+    </main>
+    <aside class="right-rail" aria-label="学习进度"><div class="rail-header"><span class="tiny-label">练习进度</span><span class="rail-dot"></span></div><div class="stat"><strong id="attemptedStat">0</strong><span>累计作答</span></div><div class="stat"><strong id="accuracyStat">—</strong><span>累计正确率</span></div><div class="stat"><strong id="wrongStat">0</strong><span>曾做错的题</span></div><div class="rail-divider"></div><p class="tiny-label">本组题目</p><div id="questionGrid" class="question-grid"><span class="empty-grid">开始练习后显示</span></div><div class="listening-tip"><span class="tiny-label">听力小提醒</span><p>别等每个词都听清。<br>留意重音与语调，<br>先判断对方想做什么。</p><span class="tip-rule"></span></div></aside>
+  </div>
+  <dialog id="settingsDialog"><form id="settingsForm"><div class="dialog-heading"><div><p class="eyebrow">QWEN CLOUD VOICE</p><h2>连接你的云端语音</h2></div><button type="button" class="close-button" id="closeSettings" aria-label="关闭设置">×</button></div><p class="dialog-intro">使用百炼 API Key，把题干读成自然的英文。模型已设置连读、弱读与美式语调要求。</p><label class="field">API Key<input id="keyInput" type="password" autocomplete="off" placeholder="sk-…（只保存在本机）"><small id="keyHelp">不会写入网页或练习记录，也不会显示在聊天里。</small></label><label class="field">Key 所属地域<select id="regionSelect"><option value="beijing">中国内地 · 北京</option><option value="singapore">国际 · 新加坡</option></select><small>北京与新加坡的 Key 不通用，请与百炼控制台一致。</small></label><p class="setup-status" id="setupStatus" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="button text-button" id="forgetKey">移除本机密钥</button><button class="button primary" id="saveKey" type="submit">保存并试听</button></div><p class="billing-note">生成语音使用你的百炼额度；同一题干和音色只生成一次，重听使用本地缓存。</p></form></dialog>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>

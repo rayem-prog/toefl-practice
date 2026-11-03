@@ -1,0 +1,16 @@
+# Personal records, secrets, caches and local runtime files
+.DS_Store
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+credentials.json
+*backup*.json
+*记录*.json
+*.log
+*.pid
+listening/audio/*
+!listening/audio/.gitkeep
+node_modules/
+.venv/
